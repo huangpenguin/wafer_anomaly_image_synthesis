@@ -183,7 +183,23 @@ def make_anomaly_mask_by_name(
     output_folder: Path = None,
 ):
     """
-TODO
+    Generates and saves a binary anomaly mask for a given file based on anomaly scores and a threshold.
+
+    Args:
+        anomaly_scores_df (pd.DataFrame): A DataFrame where each row corresponds to a file's anomaly scores.
+            The scores are expected to be accessible via `file_stem` and reshaped into a 512x512 array.
+        file_stem (str): The name of the file (without extension) for which to generate the anomaly mask.
+        threshold (float): The threshold value to distinguish anomalous regions.
+        output_folder (Path, optional): The directory where the binary mask image will be saved. If not 
+            provided, an exception may occur when creating the output directory.
+
+    Raises:
+        KeyError: If the `file_stem` is not found in `anomaly_scores_df`.
+        ValueError: If the anomaly scores cannot be reshaped into a 512x512 array.
+        IOError: If the binary mask image cannot be saved to the specified output path.
+
+    Returns:
+        None.
 
     """
     #anomaly_scores = anomaly_scores_df.values.reshape(len(anomaly_scores_df), 1, 512, 512  )
@@ -244,7 +260,6 @@ def resize_image(
     try:
         # Apply the resize transformation
         resized_img = transform(img)
-        print("Resized image successfully.")
     except Exception as e:
         print(f"Error resizing image: {e}")
         raise RuntimeError("Failed to resize the image.") from e

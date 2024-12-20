@@ -3,33 +3,38 @@ import numpy as np
 from pathlib import Path
 from scipy.stats import mode
 import pandas as pd
+from typing import Tuple, Union
 
 
-def align_images(
-    base_image: Image.Image,
+def align_image_arrays(
+    base_image: np.ndarray,
     base_image_distance: float,
-    reference_image: Image.Image,
+    reference_image: np.ndarray,
     reference_image_distance: float,
     is_vertical: bool = True,
     return_gap_mask: bool = False,
-) -> tuple:
+) -> Union[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray, np.ndarray]]:
     """
     Aligns the reference image with the base image based on specified distances.
 
     This function shifts the reference image either vertically or horizontally to align it with the base image.
 
     Args:
-        base_image (Image.Image): The base image used as a reference.
+        base_image (np.ndarray): The base image used as a reference.
         base_image_distance (float): Distance from a specific edge of the base image.
-        reference_image (Image.Image): The image to be aligned.
+        reference_image (np.ndarray): The image to be aligned.
         reference_image_distance (float): Distance from the same edge of the reference image.
         is_vertical (bool): If True, aligns vertically; if False, horizontally.
         return_gap_mask (bool): If True, returns a mask indicating gap areas.
 
     Returns:
-        tuple:
-            - If `return_gap_mask` is False: Pair of aligned images
-            - If `return_gap_mask` is True:  Pair of aligned images and gap_mask between two pics)
+        Union[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray, np.ndarray]]:
+            - If `return_gap_mask` is False:
+                A tuple of two aligned image arrays:
+                (aligned_base_image, shifted_reference_image).
+            - If `return_gap_mask` is True:
+                A tuple of two aligned image arrays and a gap mask:
+                (aligned_base_image, shifted_reference_image, gap_mask).
     """
     # Convert images to numpy arrays
     base_image_array = np.array(base_image)
@@ -90,7 +95,7 @@ def align_images(
         return base_image_array, shifted_reference_array
 
 
-def save_image_with_overwrite(image: Image.Image, output_file: Path):
+def save_image_with_replace(image: Image.Image, output_file: Path):
     """
     Saves an image to the specified output file, overwriting it if it already exists.
 
@@ -100,62 +105,24 @@ def save_image_with_overwrite(image: Image.Image, output_file: Path):
 
     Raises:
         IOError: If the image cannot be saved to the specified path.
+        OSError: If an existing file cannot be deleted.
 
     """
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     if output_file.exists():
-        output_file.unlink()
-        print(f"Deleted existing file: {output_file}")
+        try:
+            output_file.unlink()
+            print(f"Deleted existing file: {output_file}")
+        except OSError as e:
+            raise OSError(f"Failed to delete the existing file: {output_file}") from e
 
-    image.save(output_file)
-    print(f"Saved image to: {output_file}")
-    print("####################################################################")
-
-
-# def generate_reference_images(original_array:np.ndarray,mask_array:np.ndarray,is_vertical)->Tuple[np.array,np.array]:
-
-#     """
-#     Generates reference images by applying the given mask to the original image.
-#     The reference images are computed based on the mean and mode of the masked regions.
-
-#     Args:
-#         original_image (image): The original image from which reference values are extracted.
-#         mask_image (image): A binary mask image where 255 represents the selected area and 0 represents the excluded area.
-#         mask_image_name (str): A string identifier that determines the processing approach
-#                                (e.g., "C" for horizontal processing, "A"/"E" for vertical processing).
-
-#     Returns:
-#         tuple: A tuple containing two reference images:
-#             - The first image with masked regions replaced by the mean of the corresponding rows or columns.
-#             - The second image with masked regions replaced by the mode of the corresponding rows or columns.
-#     """
-#     mask = mask_array
-#     original = original_array
-
-#     result_image_mean = original.copy()
-#     result_image_mode = original.copy()
-
-#     if is_vertical:
-#         for i in range(mask.shape[0]):  # Process each row
-#             row_mask = mask[i, :] == 0  # Identify excluded areas in the row
-#             row_values = original[i, row_mask] if np.any(row_mask) else original[i, :]
-#             mean_value = np.mean(row_values)
-#             mode_value = mode(row_values, axis=None).mode
-#             result_image_mean[i, :] = mean_value
-#             result_image_mode[i, :] = mode_value
-
-#     else:
-#         for j in range(mask.shape[1]):  # Process each column
-#             col_mask = mask[:, j] == 0  # Identify excluded areas in the column
-#             col_values = original[col_mask, j] if np.any(col_mask) else original[:, j]
-#             mean_value = np.mean(col_values)
-#             mode_value = mode(col_values, axis=None).mode
-#             result_image_mean[:, j] = mean_value
-#             result_image_mode[:, j] = mode_value
-
-#     return result_image_mean, result_image_mode
-
+    # Save the image to the output file
+    try:
+        image.save(output_file)
+        print(f"Saved image to: {output_file}")
+    except IOError as e:
+        raise IOError(f"Failed to save the image to {output_file}") from e
 
 def generate_reference_array(
     original_array: np.ndarray,
@@ -176,15 +143,22 @@ def generate_reference_array(
     Returns:
         np.ndarray: A reference image where masked regions are replaced by the specified aggregation (mean or mode).
     """
+    
+    # Validate inputs
+    if original_array.shape != mask_array.shape:
+        raise ValueError("original_array and mask_array must have the same shape.")   
+    if output_type not in {"mean", "mode"}:
+        raise ValueError("Invalid output_type. Choose 'mean' or 'mode'.")
+    
     mask = mask_array
     original = original_array
-
     result_image = original.copy()
 
     if is_vertical:
         for i in range(mask.shape[0]):  # Process each row
-            row_mask = mask[i, :] == 0  # Identify excluded areas in the row
-            row_values = original[i, row_mask] if np.any(row_mask) else original[i, :]
+            row_mask = mask[i, :] == 0  # Identify excluded areas(anomaly) in the row 
+            row_values = original[i, row_mask] if np.any(row_mask) else original[i, :]# if there is any anomaly, use row_mask to aviod involving anomaly pixels into the generation of reference pics.
+            
             if output_type == "mean":
                 value = np.mean(row_values)
             elif output_type == "mode":
@@ -222,21 +196,26 @@ def apply_mask_to_image(
     Returns:
         np.ndarray: The image with the mask applied, where masked areas are set to 0 (black).
     """
-    # Create a copy of the original image array
-    masked_array = np.copy(image_array)
-
-    # Create a boolean mask based on the threshold value
+    if image_array.ndim not in {2, 3}:
+        raise ValueError("image_array must be a 2D (grayscale) or 3D (color) array.")
+    if mask_array.ndim != 2:
+        raise ValueError("mask_array must be a 2D array.")
+    if image_array.shape[:2] != mask_array.shape:
+        raise ValueError("The spatial dimensions of image_array and mask_array must match.")
+    
     mask = mask_array >= mask_value
-
-    # Set unmasked areas to 0 (black)
-    masked_array[~mask] = 0
+    if image_array.ndim == 3:  # For color images
+        masked_array = np.zeros_like(image_array)
+        for channel in range(image_array.shape[2]):
+            masked_array[..., channel] = image_array[..., channel] * mask
+    else:  # For grayscale images
+        masked_array = image_array * mask
 
     return masked_array
 
-
 def calculate_image_difference(
-    base_image: np.array, reference_image: np.array
-) -> np.array:
+    base_image: np.ndarray, reference_image: np.ndarray
+) -> np.ndarray:
     """
     Calculates the pixel-wise difference between two images (base - reference).
     The difference is computed in int16 to handle overflow/underflow issues.
@@ -258,7 +237,7 @@ def calculate_image_difference(
     return diff_image
 
 
-def apply_difference_to_image(back_image: np.array, diff_image: np.array) -> np.array:
+def apply_difference_to_image(back_image_array: np.array, diff_image_array: np.array) -> np.array:
     """
     Applies a difference image to a background image and clamps the result
     to the valid uint8 range [0, 255].
@@ -271,8 +250,8 @@ def apply_difference_to_image(back_image: np.array, diff_image: np.array) -> np.
         numpy.ndarray
     """
     # Ensure input images are numpy arrays
-    back = np.array(back_image, dtype=np.int16)
-    diff = np.array(diff_image, dtype=np.int16)
+    back = np.array(back_image_array, dtype=np.int16)
+    diff = np.array(diff_image_array, dtype=np.int16)
 
     # Add the difference image to the background
     result = back + diff
@@ -320,28 +299,39 @@ def get_distance(get_file_name: str, csv_path: Path):
 
 
 def from_int16_to_uint8(result_array):
+    
     clipped_result = np.clip(result_array, 0, 255)
     uint8_result_array = clipped_result.astype(np.uint8)
 
     return uint8_result_array
 
 
-def scale_image(image_array: np.ndarray, scale_factor: float) -> np.ndarray:
+def scale_image(image_array: np.ndarray, scale_factor: float, clip: bool = False) -> np.ndarray:
     """
-    Scales the input image by a given factor and clips the values to the range [0, 255].
+    Scales the input image by a given factor. Optionally clips the values to the range [0, 255].
 
     Args:
         image_array (np.ndarray): The input image array (2D or 3D).
         scale_factor (float): The factor by which to scale the image.
+        clip (bool): Whether to clip the scaled values to the range [0, 255].
 
     Returns:
-        np.ndarray: The scaled image, clipped to the range [0, 255] and of type uint8.
+        np.ndarray: The scaled image, optionally clipped, and of type int16.
     """
+    # Validate input
+    if not isinstance(image_array, np.ndarray):
+        raise ValueError("image_array must be a numpy array.")
+    if image_array.ndim not in {2, 3}:
+        raise ValueError("image_array must be a 2D (grayscale) or 3D (color) array.")
+    if not isinstance(scale_factor, (int, float)):
+        raise ValueError("scale_factor must be an int or float.")
+
     # Scale the image
     scaled_image = image_array * scale_factor
 
-    # Clip the values to the range [0, 255]
-    # clipped_image = np.clip(scaled_image, 0, 255)
+    # Optionally clip the values
+    if clip:
+        scaled_image = np.clip(scaled_image, 0, 255)
 
-    # Convert to uint8
+    # Return as int16
     return scaled_image.astype(np.int16)
