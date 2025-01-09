@@ -73,7 +73,7 @@ def split_image(
     if not output_folder.exists():
         output_folder.mkdir(parents=True, exist_ok=True)
 
-    if save:  # TODO test
+    if save:
         left_image_path = output_folder / f"{image_name}_I.tif"
         right_image_path = output_folder / f"{image_name}_O.tif"
         save_image(left_image, left_image_path)
@@ -174,7 +174,8 @@ def get_best_threshold(anomaly_scores_df: pd.DataFrame, file_stem: str, is_verti
         # Column-wise: Find the maximum of the minimum values of each column
         threshold = np.max(np.min(anomaly_map, axis=0))
     threshold=np.ceil(threshold*100)/100 
-    return threshold #TODO accuracy problem 0.150000000002
+    threshold = round(threshold, 2)#nearest oven number
+    return threshold 
 
 def make_anomaly_mask_by_name(
     anomaly_scores_df: pd.DataFrame,
