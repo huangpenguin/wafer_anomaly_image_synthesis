@@ -1,8 +1,13 @@
-由于使用的是sc社的摄影数据此处仅描述数据构造，省略具体数据。
+### Since the data used here comes from a semiconductor manufacturing company, only the data structure is described, and specific data details are omitted.
 
-base_image_file,back_image_file分别是用来合成的异常图像（原）和用来做背景的正常图像。
+### Data Description
+base_image_file and back_image_file
 
-anomaly_scores_df是一个关于512*512图像的异常度结果的csv，使用的异常度检测的rd4ad模型，训练了正常图像，并输出了每个像素的异常度
-数据格式为（pic_nums,[512,512]），每一行都是一张图片的异常度。
+base_image_file refers to the original anomalous image used for synthesis.
+back_image_file refers to the normal background image.
+anomaly_scores_df
 
+This is a CSV file containing anomaly scores for 512x512 images.
+The anomaly detection model used is RD4AD, which was trained on normal images and outputs anomaly scores for each pixel.
+The data format is structured as (pic_nums, [512,512]), where each row represents the anomaly scores of a single image.
 
