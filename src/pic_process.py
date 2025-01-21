@@ -4,6 +4,7 @@ from pathlib import Path
 from scipy.stats import mode
 import pandas as pd
 from typing import Tuple, Union
+import cv2
 
 
 def align_image_arrays(
@@ -262,7 +263,7 @@ def apply_difference_to_image(back_image_array: np.array, diff_image_array: np.a
     return result_clamped
 
 
-def get_distance(get_file_name: str, csv_path: Path):
+def get_distance(get_file_name: str, csv_path: Path,column_name:str="data"):
     """
     Retrieves alignment distance and orientation from a CSV file based on the given file name.
 
@@ -278,8 +279,16 @@ def get_distance(get_file_name: str, csv_path: Path):
         KeyError: If the required columns are not found in the CSV file.
         IndexError: If the file name does not match any row in the CSV.
     """
-    alignment_data = pd.read_csv(csv_path)
-
+    try:
+        alignment_data = pd.read_csv(csv_path)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"The specified CSV file does not exist: {csv_path}")
+    
+    required_columns = ["File", "Area", column_name]
+    for col in required_columns:
+        if col not in alignment_data.columns:
+            raise KeyError(f"Missing required column '{col}' in the CSV file.")
+        
     if "C" not in get_file_name:
         get_file_name = get_file_name[:-2]
 
@@ -287,16 +296,52 @@ def get_distance(get_file_name: str, csv_path: Path):
         alignment_data["File"].astype(str) + "_" + alignment_data["Area"].astype(str)
     )
 
-    try:
-        row = alignment_data[alignment_data["File_Area"] == get_file_name].iloc[0]
-    except IndexError:
-        print(f"No alignment data found for {get_file_name}. Skipping this folder.")
-        raise
+    # try:
+    #     row = alignment_data[alignment_data["File_Area"] == get_file_name].iloc[0]
+    # except IndexError:
+    #     print(f"No alignment data found for {get_file_name}. Skipping this folder.")
+    #     raise
 
-    #area = row["Area"]
-    distance = row["Data"]
+    # Attempt to match get_file_name
+    filtered_data = alignment_data[alignment_data["File_Area"] == get_file_name]
+    if filtered_data.empty:
+        raise ValueError(
+            f"No alignment data found for file name: {get_file_name}. "
+            "Please check if the file name is correct and matches the data in the CSV."
+        )
+
+    # Retrieve the first matching row
+    row = filtered_data.iloc[0]
+    distance = row[column_name]
     return distance
 
+def correct_distance_and_draw_line(distance, is_vertical, image_array):
+    """
+    Correct the edge distance based on the image resize factor and draw a yellow line on the image to verify.
+
+    Args:
+        distance (float): The original distance from the edge.
+        is_vertical (bool): A flag indicating whether the distance is vertical (True) or horizontal (False).
+        image (numpy.ndarray): The original image on which the line will be drawn.
+
+    Returns:
+        tuple: A tuple containing the corrected distance (float) and the image with the yellow line drawn (numpy.ndarray).
+    """
+
+    original_height_horizotal, original_width_horizotal =248,1120/2
+    original_height_vertical, original_width_cetical =328,248
+    target_size = 512  # The target size for the image is 512x512
+
+    # Correct the distance
+    if is_vertical:
+        corrected_distance = distance / original_height_vertical * target_size
+        cv2.line(image_array, (int(corrected_distance), 0), (int(corrected_distance), target_size), (0, 255, 255), 2)
+    else:
+        corrected_distance = distance / original_width_horizotal * target_size
+        cv2.line(image_array, (0, int(corrected_distance)), (target_size, int(corrected_distance)), (0, 255, 255), 2)
+
+    # Return the corrected distance and the image with the yellow line
+    return corrected_distance, image_array
 
 def from_int16_to_uint8(result_array):
     
