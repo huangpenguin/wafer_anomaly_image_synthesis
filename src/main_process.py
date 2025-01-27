@@ -122,23 +122,22 @@ def generate_pics(
     base_image_dis_from_edge = pic_pro.get_distance(
         base_image_stem, aligned_data_path, column_name
     )
-    # (base_image_dis_from_edge, base_array_lined) = (
-    #     pic_pro.correct_distance_and_draw_line(
-    #         base_image_dis_from_edge, is_vertical, base_array
-    #     )
-    # )
-
+    (base_image_dis_from_edge, base_array_lined) = (
+        pic_pro.correct_distance_and_draw_line(
+            base_image_dis_from_edge, is_vertical, base_array
+        )
+    )
     back_image_dis_from_edge = pic_pro.get_distance(
         back_image_stem, aligned_data_path, column_name
+    )#todo make sure the column name is correct
+    (back_image_dis_from_edge, back_array_lined) = (
+        pic_pro.correct_distance_and_draw_line(
+            back_image_dis_from_edge, is_vertical, back_array
+        )
     )
-    # (back_image_dis_from_edge, back_array_lined) = (
-    #     pic_pro.correct_distance_and_draw_line(
-    #         back_image_dis_from_edge, is_vertical, back_array
-    #     )
-    # )
     reference_image_array = pic_pro.generate_reference_array(
         base_array, mask_array_from_anomaly_scores, is_vertical, output_type="mean"
-    )
+    )    
     diff_array = pic_pro.calculate_image_difference(base_array, reference_image_array)
     masked_diff_array = pic_pro.apply_mask_to_image(
         diff_array, mask_array_from_anomaly_scores
@@ -165,16 +164,16 @@ def generate_pics(
     output_filename = f"(result)_scale{scale_factor}_mask{threshold}.png"
 
     Image.fromarray(result_array).save(output_folder / output_filename)
-    #Image.fromarray(base_array_lined).save(output_folder / f"(anomaly){base_image_stem}.png")
-    #Image.fromarray(back_array_lined).save(output_folder / f"(target){back_image_stem}.png")
-    base_image.save(output_folder / f"(anomaly){base_image_stem}.png")
-    back_image.save(output_folder / f"(target){back_image_stem}.png")
+    Image.fromarray(base_array_lined).save(output_folder / f"(anomaly){base_image_stem}.png")
+    Image.fromarray(back_array_lined).save(output_folder / f"(target){back_image_stem}.png")
+    #base_image.save(output_folder / f"(anomaly){base_image_stem}.png")
+    #back_image.save(output_folder / f"(target){back_image_stem}.png")
 
     mask_image_from_anomaly_scores.save(
         output_folder / f"(mask_from_anomaly_scores){threshold}_{mask_image_stem_from_anomaly_scores}.png"
     )
 
-    print(f"Finish making pics with {base_image_file} and {back_image_file}")
+    #print(f"Finish making pics with {base_image_file} and {back_image_file}")
 
 def convert_to_2d_list(data):
     """

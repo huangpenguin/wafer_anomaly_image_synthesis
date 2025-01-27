@@ -316,31 +316,24 @@ def get_distance(get_file_name: str, csv_path: Path,column_name:str="data"):
     return distance
 
 def correct_distance_and_draw_line(distance, is_vertical, image_array):
-    """
-    Correct the edge distance based on the image resize factor and draw a yellow line on the image to verify.
+    original_size_vertical = (328, 248)  
+    original_size_horizontal = (248, 560)  
+    target_size = (512, 512)  
+    
+    image_array = image_array.astype(np.uint8)
+    if len(image_array.shape) == 2:
+        image_array = cv2.cvtColor(image_array, cv2.COLOR_GRAY2BGR)
 
-    Args:
-        distance (float): The original distance from the edge.
-        is_vertical (bool): A flag indicating whether the distance is vertical (True) or horizontal (False).
-        image (numpy.ndarray): The original image on which the line will be drawn.
-
-    Returns:
-        tuple: A tuple containing the corrected distance (float) and the image with the yellow line drawn (numpy.ndarray).
-    """
-
-    original_height_horizotal, original_width_horizotal =248,1120/2
-    original_height_vertical, original_width_cetical =328,248
-    target_size = 512  # The target size for the image is 512x512
-
-    # Correct the distance
     if is_vertical:
-        corrected_distance = distance / original_height_vertical * target_size
-        cv2.line(image_array, (int(corrected_distance), 0), (int(corrected_distance), target_size), (0, 255, 255), 2)
+        scale_factor = target_size[0] / original_size_vertical[0]  # 512 / 328
+        corrected_distance = distance * scale_factor
+        cv2.line(image_array, (0, int(corrected_distance)), (target_size[0], int(corrected_distance)), (0, 255, 255), 2)
+        
     else:
-        corrected_distance = distance / original_width_horizotal * target_size
-        cv2.line(image_array, (0, int(corrected_distance)), (target_size, int(corrected_distance)), (0, 255, 255), 2)
+        scale_factor = target_size[1] / original_size_horizontal[1]  # 512 / 560
+        corrected_distance = distance * scale_factor
+        cv2.line(image_array, (target_size[0]-int(corrected_distance), 0), (target_size[0]-int(corrected_distance), target_size[1]), (0, 255, 255), 2)
 
-    # Return the corrected distance and the image with the yellow line
     return corrected_distance, image_array
 
 def from_int16_to_uint8(result_array):
