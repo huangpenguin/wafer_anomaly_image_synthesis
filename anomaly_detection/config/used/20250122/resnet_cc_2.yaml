@@ -1,0 +1,21 @@
+id: resnet_cc
+model: resnet50
+pretrained: False
+lr: 0.001
+epochs: 1
+save_dir: data/output/20250122
+train_dir: data/input/20250122_patterned_train
+test_dir: data/input/20250122_patterned_test
+aug_dict:
+  p_hflip: 0
+  p_vflip: 0.5
+  change_contrast: true
+cross_val: false
+save_misclassified: false
+defect_recall: 0.9
+visualize: false
+split_num: 5
+# checkpoint_path: "C:\\Users\\hino\\work\\SCREEN_WaferBevelInspection\\bevel-ml\\trunk\\data\\output\\20240927\\resnet_512_cc\\version_0\\checkpoints\\epoch=99-step=17600.ckpt"
+split_test_train: false
+use_weighted_loss: false
+save_split_result: false

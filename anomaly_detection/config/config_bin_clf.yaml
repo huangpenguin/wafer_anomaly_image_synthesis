@@ -1,0 +1,40 @@
+defaults:
+  - _self_
+  - case_bin_clf: ???
+  - override hydra/hydra_logging: disabled 
+  - override hydra/job_logging: disabled 
+
+case_bin_clf:
+  id: ???
+  model: ???
+  epochs: 100
+  lr: 0.001
+  data_dir: data/input/アノテーション済画像
+  train_dir: null
+  test_dir: null
+  save_dir: ???
+  num_classes: 2
+  data_size: 256
+  batch_size: 16
+  num_workers: 0
+  aug_dict:
+    p_hflip: 0
+    p_vflip: 0
+  use_weighted_loss: true
+  kld_weight: 0.00025
+  weight_decay: 0.0
+  scheduler_gamma: 0.95
+  cross_val: false
+  save_misclassified: true
+  seed: 42
+  
+
+hydra:
+  mode: MULTIRUN
+  output_subdir: null
+  sweeper:
+    params:
+      case_bin_clf: glob(*)
+  sweep:
+    dir: ../data/output/
+    subdir: ${case_bin_clf.id}

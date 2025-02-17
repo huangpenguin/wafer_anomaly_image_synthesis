@@ -1,0 +1,19 @@
+id: rd4ad_resnet18_256_cc
+model: rd4ad
+model_params:
+    backbone: resnet18
+epochs: 100
+data_size: 256
+pretrained: False
+save_dir: data/output/20241018
+aug_dict:
+  p_hflip: 0
+  p_vflip: 0.5
+  change_contrast: true
+num_workers: 0
+cross_val: false
+save_misclassified: false
+defect_recall: 0.9
+visualize: false
+normal_test_split_ratio: 0.2
+save_heatmap: true

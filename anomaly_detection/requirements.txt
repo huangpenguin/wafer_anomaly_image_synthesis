@@ -1,0 +1,353 @@
+aiohttp==3.9.3
+    # via dataframe-image
+    # via fsspec
+aiosignal==1.3.1
+    # via aiohttp
+anomalib==1.0.1
+    # via trunk
+antlr4-python3-runtime==4.9.3
+    # via hydra-core
+    # via omegaconf
+appdirs==1.4.4
+    # via wandb
+attrs==23.2.0
+    # via aiohttp
+    # via jsonschema
+    # via referencing
+beautifulsoup4==4.12.3
+    # via dataframe-image
+    # via nbconvert
+bleach==6.1.0
+    # via nbconvert
+certifi==2024.2.2
+    # via requests
+    # via sentry-sdk
+charset-normalizer==3.3.2
+    # via requests
+click==8.1.7
+    # via wandb
+colorama==0.4.6
+    # via click
+    # via tqdm
+contourpy==1.2.0
+    # via matplotlib
+cssutils==2.11.0
+    # via dataframe-image
+cycler==0.12.1
+    # via matplotlib
+dataframe-image==0.2.3
+    # via trunk
+defusedxml==0.7.1
+    # via nbconvert
+docker-pycreds==0.4.0
+    # via wandb
+docstring-parser==0.16
+    # via anomalib
+einops==0.8.0
+    # via trunk
+fastjsonschema==2.19.1
+    # via nbformat
+filelock==3.13.1
+    # via huggingface-hub
+    # via torch
+fonttools==4.50.0
+    # via matplotlib
+freia==0.2
+    # via trunk
+frozenlist==1.4.1
+    # via aiohttp
+    # via aiosignal
+fsspec==2024.2.0
+    # via huggingface-hub
+    # via lightning
+    # via pytorch-lightning
+    # via torch
+ftfy==6.2.0
+    # via open-clip-torch
+gitdb==4.0.11
+    # via gitpython
+gitpython==3.1.43
+    # via wandb
+html2image==2.0.4.3
+    # via dataframe-image
+huggingface-hub==0.21.4
+    # via open-clip-torch
+    # via timm
+hydra-core==1.3.2
+    # via trunk
+idna==3.6
+    # via requests
+    # via yarl
+imageio==2.34.1
+    # via imgaug
+    # via scikit-image
+imgaug==0.4.0
+    # via trunk
+jinja2==3.1.3
+    # via nbconvert
+    # via torch
+joblib==1.3.2
+    # via scikit-learn
+jsonargparse==4.27.1
+    # via anomalib
+jsonschema==4.22.0
+    # via nbformat
+jsonschema-specifications==2023.12.1
+    # via jsonschema
+jupyter-client==8.6.1
+    # via nbclient
+jupyter-core==5.7.2
+    # via jupyter-client
+    # via nbclient
+    # via nbconvert
+    # via nbformat
+jupyterlab-pygments==0.3.0
+    # via nbconvert
+kiwisolver==1.4.5
+    # via matplotlib
+kornia==0.6.6
+    # via trunk
+kornia-rs==0.1.3
+    # via kornia
+lazy-loader==0.4
+    # via scikit-image
+lightning==2.2.1
+    # via trunk
+lightning-utilities==0.10.1
+    # via lightning
+    # via pytorch-lightning
+    # via torchmetrics
+lxml==5.2.2
+    # via dataframe-image
+markdown-it-py==3.0.0
+    # via rich
+markupsafe==2.1.5
+    # via jinja2
+    # via nbconvert
+matplotlib==3.8.3
+    # via imgaug
+    # via trunk
+mdurl==0.1.2
+    # via markdown-it-py
+mistune==3.0.2
+    # via dataframe-image
+    # via nbconvert
+mpmath==1.3.0
+    # via sympy
+multidict==6.0.5
+    # via aiohttp
+    # via yarl
+nbclient==0.10.0
+    # via nbconvert
+nbconvert==7.16.4
+    # via dataframe-image
+nbformat==5.10.4
+    # via nbclient
+    # via nbconvert
+networkx==3.2.1
+    # via scikit-image
+    # via torch
+numpy==1.26.4
+    # via contourpy
+    # via freia
+    # via imageio
+    # via imgaug
+    # via lightning
+    # via matplotlib
+    # via opencv-python
+    # via openvino
+    # via pandas
+    # via pytorch-lightning
+    # via scikit-image
+    # via scikit-learn
+    # via scipy
+    # via shapely
+    # via tifffile
+    # via torchmetrics
+    # via torchvision
+omegaconf==2.3.0
+    # via anomalib
+    # via hydra-core
+    # via trunk
+open-clip-torch==2.24.0
+    # via trunk
+opencv-python==4.9.0.80
+    # via imgaug
+    # via trunk
+openvino==2024.1.0
+    # via trunk
+openvino-telemetry==2024.1.0
+    # via openvino
+packaging==23.2
+    # via dataframe-image
+    # via huggingface-hub
+    # via hydra-core
+    # via kornia
+    # via lazy-loader
+    # via lightning
+    # via lightning-utilities
+    # via matplotlib
+    # via nbconvert
+    # via openvino
+    # via pytorch-lightning
+    # via scikit-image
+    # via torchmetrics
+pandas==2.2.1
+    # via dataframe-image
+    # via trunk
+pandocfilters==1.5.1
+    # via nbconvert
+pillow==10.2.0
+    # via dataframe-image
+    # via imageio
+    # via imgaug
+    # via matplotlib
+    # via scikit-image
+    # via torchvision
+platformdirs==4.2.2
+    # via jupyter-core
+protobuf==4.25.3
+    # via open-clip-torch
+    # via wandb
+psutil==5.9.8
+    # via wandb
+pygments==2.17.2
+    # via nbconvert
+    # via rich
+pyparsing==3.1.2
+    # via matplotlib
+python-dateutil==2.9.0.post0
+    # via jupyter-client
+    # via matplotlib
+    # via pandas
+pytorch-lightning==2.2.1
+    # via lightning
+pytz==2024.1
+    # via pandas
+pywin32==306
+    # via jupyter-core
+pyyaml==6.0.1
+    # via huggingface-hub
+    # via jsonargparse
+    # via lightning
+    # via omegaconf
+    # via pytorch-lightning
+    # via timm
+    # via wandb
+pyzmq==26.0.3
+    # via jupyter-client
+referencing==0.35.1
+    # via jsonschema
+    # via jsonschema-specifications
+regex==2024.4.28
+    # via open-clip-torch
+requests==2.31.0
+    # via dataframe-image
+    # via html2image
+    # via huggingface-hub
+    # via wandb
+rich==13.7.1
+    # via anomalib
+    # via rich-argparse
+rich-argparse==1.4.0
+    # via anomalib
+rpds-py==0.18.1
+    # via jsonschema
+    # via referencing
+safetensors==0.4.2
+    # via timm
+scikit-image==0.23.2
+    # via imgaug
+scikit-learn==1.4.1.post1
+    # via trunk
+scipy==1.12.0
+    # via freia
+    # via imgaug
+    # via scikit-image
+    # via scikit-learn
+sentencepiece==0.2.0
+    # via open-clip-torch
+sentry-sdk==2.0.1
+    # via wandb
+setproctitle==1.3.3
+    # via wandb
+shapely==2.0.4
+    # via imgaug
+six==1.16.0
+    # via bleach
+    # via docker-pycreds
+    # via imgaug
+    # via python-dateutil
+smmap==5.0.1
+    # via gitdb
+soupsieve==2.5
+    # via beautifulsoup4
+sympy==1.12
+    # via torch
+threadpoolctl==3.3.0
+    # via scikit-learn
+tifffile==2024.4.24
+    # via scikit-image
+timm==0.9.16
+    # via open-clip-torch
+    # via trunk
+tinycss2==1.3.0
+    # via nbconvert
+torchmetrics==1.3.1
+    # via lightning
+    # via pytorch-lightning
+    # via trunk
+tornado==6.4
+    # via jupyter-client
+tqdm==4.66.2
+    # via huggingface-hub
+    # via lightning
+    # via open-clip-torch
+    # via pytorch-lightning
+    # via trunk
+traitlets==5.14.3
+    # via jupyter-client
+    # via jupyter-core
+    # via nbclient
+    # via nbconvert
+    # via nbformat
+typing-extensions==4.10.0
+    # via huggingface-hub
+    # via lightning
+    # via lightning-utilities
+    # via pytorch-lightning
+    # via torch
+tzdata==2024.1
+    # via pandas
+urllib3==2.2.1
+    # via requests
+    # via sentry-sdk
+wandb==0.16.6
+    # via trunk
+wcwidth==0.2.13
+    # via ftfy
+webencodings==0.5.1
+    # via bleach
+    # via tinycss2
+websocket-client==1.8.0
+    # via html2image
+yarl==1.9.4
+    # via aiohttp
+setuptools==69.1.1
+    # via lightning-utilities
+    # via wandb
+
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.2.1+cu121
+    # via lightning
+    # via pytorch-lightning
+    # via timm
+    # via torchaudio
+    # via torchmetrics
+    # via torchvision
+    # via trunk
+torchaudio==2.2.1+cu121
+    # via mat
+torchvision==0.17.1+cu121
+    # via timm
+    # via trunk

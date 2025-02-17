@@ -327,12 +327,12 @@ def correct_distance_and_draw_line(distance, is_vertical, image_array):
     if is_vertical:
         scale_factor = target_size[0] / original_size_vertical[0]  # 512 / 328
         corrected_distance = distance * scale_factor
-        cv2.line(image_array, (0, int(corrected_distance)), (target_size[0], int(corrected_distance)), (0, 255, 255), 2)
+        cv2.line(image_array, (0, round(corrected_distance)), (target_size[0], round(corrected_distance)), (0, 255, 255), 2)
         
     else:
         scale_factor = target_size[1] / original_size_horizontal[1]  # 512 / 560
         corrected_distance = distance * scale_factor
-        cv2.line(image_array, (target_size[0]-int(corrected_distance), 0), (target_size[0]-int(corrected_distance), target_size[1]), (0, 255, 255), 2)
+        cv2.line(image_array, (target_size[0]-round(corrected_distance), 0), (target_size[0]-round(corrected_distance), target_size[1]), (0, 255, 255), 2)
 
     return corrected_distance, image_array
 

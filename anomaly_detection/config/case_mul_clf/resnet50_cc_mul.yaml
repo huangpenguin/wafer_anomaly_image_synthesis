@@ -1,0 +1,23 @@
+id: resnet50_cc_mul_11class_epoch40
+model: resnet50
+pretrained: False
+lr: 0.001
+epochs: 40
+data_dir: data/input/20250122_input
+train_dir: data/input/20250123_patterned_train
+test_dir: data/input/20250123_patterned_test
+save_dir: data/output/20250123
+aug_dict:
+  p_hflip: 0
+  p_vflip: 0.5
+  change_contrast: true
+cross_val: false
+save_misclassified: false
+defect_recall: 0.9
+visualize: false
+split_num: 5
+split_test_train: false
+use_weighted_loss: false
+save_split_result: false
+data_name: 20250124_patterned
+num_classes: 11

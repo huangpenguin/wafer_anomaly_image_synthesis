@@ -1,0 +1,11 @@
+data description:
+data folder ->正式の出力と今使っているデータ
+tmp data folder->前に使ったデータ
+
+manual:
+pic_mix.pyを実行することで全部の操作が完成する
+
+todo:
+tiger-stripe対応の合成方式は未完成
+名前から判断できるから、csv_analyser.pyのfilename_analyにtiger-stripeの判断を追加し、
+pic_process.pyの中に処理関数を一個追加したら問題ないと思います。

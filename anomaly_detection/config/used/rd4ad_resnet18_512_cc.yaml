@@ -1,0 +1,22 @@
+id: rd4ad_resnet18_512_cc_sample
+model: rd4ad
+model_params:
+    backbone: resnet18
+epochs: 1
+data_size: 512
+pretrained: False
+data_dir: data/input/20241021_sample
+save_dir: data/output/
+aug_dict:
+  p_hflip: 0
+  p_vflip: 0.5
+  change_contrast: true
+num_workers: 0
+cross_val: false
+save_misclassified: false
+defect_recall: 0.9
+visualize: false
+normal_test_split_ratio: 0.2
+save_heatmap: true
+split_test_train: false
+checkpoint_path: "data\\output\\20240926\\rd4ad_resnet18_512_cc\\version_0\\checkpoints\\epoch=199-step=17600.ckpt"

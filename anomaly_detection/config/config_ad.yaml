@@ -1,0 +1,42 @@
+defaults:
+  - _self_
+  - case_ad: ???
+  - override hydra/hydra_logging: disabled 
+  - override hydra/job_logging: disabled 
+
+case_ad:
+  id: ???
+  model: ???
+  epochs: 100
+  lr: 0.005
+  data_dir: data/input/アノテーション済画像
+  save_dir: ???
+  num_classes: 2
+  data_size: 256
+  batch_size: 16
+  num_workers: 0
+  aug_dict:
+    p_hflip: 0
+    p_vflip: 0
+  use_weighted_loss: true
+  normal_test_split_ratio: 0.2
+  kld_weight: 0.00025
+  weight_decay: 0.0
+  scheduler_gamma: 0.95
+  cross_val: false
+  save_misclassified: false
+  split_test_train: true
+  train_dir: null
+  test_dir: null
+  seed: 42
+
+
+hydra:
+  mode: MULTIRUN
+  output_subdir: null
+  sweeper:
+    params:
+      case_ad: glob(*)
+  sweep:
+    dir: ../data/output/
+    subdir: ${case_ad.id}

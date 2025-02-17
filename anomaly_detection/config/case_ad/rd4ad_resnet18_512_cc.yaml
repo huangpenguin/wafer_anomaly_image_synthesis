@@ -1,0 +1,29 @@
+id: rd4ad_resnet18_512_cc
+model: rd4ad
+model_params:
+    backbone: resnet18
+epochs: 100
+data_size: 512
+pretrained: False
+data_dir: data/input/20250207_input_new_with_watermark
+train_dir: null
+test_dir: null
+save_dir: data/output/20250207_new_with_watermark
+aug_dict:
+  p_hflip: 0
+  p_vflip: 0.5
+  change_contrast: true
+num_workers: 0
+cross_val: false
+save_misclassified: false
+defect_recall: 0.9
+visualize: false
+normal_test_split_ratio: 0.2
+save_heatmap: true
+gamma_heatmap: 1.0
+seed: 43
+#checkpoint_path: "C:/Users/huang/work/bevel-ml/trunk/data/output/20250206/rd4ad_resnet18_512_cc/version_0/checkpoints/epoch=99-step=25200.ckpt"
+save_mask: true
+mask_thr: 0.08
+save_split_result: true
+data_name: "20250207_new_with_watermark"

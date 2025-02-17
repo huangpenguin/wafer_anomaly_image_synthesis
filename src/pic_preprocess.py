@@ -205,7 +205,7 @@ def make_anomaly_mask_by_name(
     """
     #anomaly_scores = anomaly_scores_df.values.reshape(len(anomaly_scores_df), 1, 512, 512  )
 
-    threshold_dir = output_folder / f"threshold_{threshold}"
+    threshold_dir = output_folder
     threshold_dir.mkdir(parents=True, exist_ok=True)
     # Generate binary anomaly regions
     anomaly_map=anomaly_scores_df.loc[file_stem].values.reshape(1,512,512)
@@ -269,3 +269,38 @@ def resize_image(
         save_image(resized_img, output_path)
     elif not save:
         return resized_img
+
+def find_and_open_image(mask_image_folder: Path, mask_image_file: str) -> Image.Image:
+    """Searches for a PNG image with the file stem of `mask_image_file` in `mask_image_folder` and its subdirectories, and returns the opened PIL Image.
+
+    Args:
+        mask_image_folder (Path): The root directory in which to search for the image.
+        mask_image_file (str): The image file name (with or without extension). The function uses the file stem (name without extension).
+
+    Returns:
+        Image.Image: The opened PIL Image object.
+
+    Raises:
+        FileNotFoundError: If no PNG file with the matching file stem is found in `mask_image_folder` or its subdirectories.
+        RuntimeError: If an error occurs while opening the image file.
+    """
+    # Extract the file stem (filename without extension)
+    file_stem = Path(mask_image_file).stem
+
+    # Recursively search for all .png files and filter those that match the file stem
+    matching_files = [
+        path for path in mask_image_folder.rglob("*.png")
+        if path.stem == file_stem
+    ]
+
+    if not matching_files:
+        raise FileNotFoundError(
+            f"No matching PNG file found: {file_stem}.png in {mask_image_folder} and its subdirectories."
+        )
+
+    image_path = matching_files[0]
+
+    try:
+        return Image.open(image_path)
+    except Exception as e:
+        raise RuntimeError(f"Unable to open image file: {image_path}") from e
